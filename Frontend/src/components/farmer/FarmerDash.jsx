@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, Clock, MapPin ,  Calendar, ChevronRight, TrendingUp, Package, Tag} from 'lucide-react';
+import { ChevronLeft, Clock, MapPin, Calendar, ChevronRight, TrendingUp, Package, Tag } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
 
@@ -443,7 +443,7 @@ const FarmerDash = () => {
           </div>
         </div>
 
-      
+
       </main>
 
       {/* Chatbot Widget */}
@@ -454,7 +454,8 @@ const FarmerDash = () => {
               onClick={toggleChat}
               className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-colors flex items-center"
             >
-              <MessageCircle size={24} className="mr-2" /> GauGuru Assistant
+              <MessageCircle size={24} className={`${window.innerWidth <= 600 ? '' : 'mr-2'}`} />
+              <span className="max-[600px]:hidden">GauGuru Assistant</span>
             </button>
 
           </div>
@@ -471,7 +472,7 @@ const FarmerDash = () => {
                 >
                   <Minus size={20} />
                 </button>
-                
+
               </div>
             </div>
             <div className="h-[80vh]">

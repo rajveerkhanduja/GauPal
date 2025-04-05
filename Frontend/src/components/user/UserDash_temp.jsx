@@ -595,9 +595,9 @@ const UserDashboard = () => {
                             onClick={toggleChat}
                             className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-colors flex items-center"
                         >
-                            <MessageCircle size={24} className="mr-2" /> GauGuru Assistant
+                            <MessageCircle size={24} className={`${window.innerWidth <= 600 ? '' : 'mr-2'}`} />
+                            <span className="max-[600px]:hidden">GauGuru Assistant</span>
                         </button>
-
                     </div>
                 ) : (
                     <div className="bg-white rounded-lg shadow-xl border border-gray-200">
@@ -612,7 +612,7 @@ const UserDashboard = () => {
                                 >
                                     <Minus size={20} />
                                 </button>
-                                
+
                             </div>
                         </div>
                         <div className="h-[80vh]">
