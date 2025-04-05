@@ -64,7 +64,7 @@ const LoginPage = () => {
         {/* Image Section */}
         <div className="hidden md:block w-1/2 relative">
           <img
-            src="/src/assets/farmer1.jpg"
+            src="/farmer1.jpg"
             alt="Farmer"
             className="absolute inset-0 w-full h-full object-cover"
           />

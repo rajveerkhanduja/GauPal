@@ -17,7 +17,9 @@ import {
   MapPin,
   Package,
   ListOrdered,
-  ScanSearch
+  ScanSearch,
+  Calendar,
+  Dna
 } from 'lucide-react';
 import axios from "axios";
 import LogoutButton from '../Logout.jsx';
@@ -28,14 +30,16 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState(null);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const navItems = [
     { icon: Home, label: 'Dashboard', path: '/farmer/dashboard' },
-    { icon: Home, label: 'Manage Cows', path: '/farmer/manage-cow' },
-    { icon: ListOrdered, label: 'Orders', path: '/orders' },
+    { icon: Dna, label: 'Manage Cows', path: '/farmer/manage-cow' },
+    { icon: ListOrdered, label: 'Orders', path: '/farmer/coming-soon' },
     { icon: Stethoscope, label: 'Identify Disease', path: '/farmer/disease' },
     { icon: ScanSearch, label: 'Identify Breed', path: '/farmer/breed-identify' },
     { icon: Newspaper, label: 'Articles', path: '/farmer/article' },
+    { icon: Calendar, label: 'Events', path: '/farmer/events' },
     { icon: MapPin, label: 'Vet Near Me', path: '/farmer/map' },
   ];
 
@@ -46,6 +50,7 @@ const Sidebar = () => {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleProductsDropdown = () => setIsProductsOpen(!isProductsOpen);
+  const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
 
   const auth = getAuth();
   useEffect(() => {
@@ -59,13 +64,14 @@ const Sidebar = () => {
         }
 
         const token = await user.getIdToken();
-        const response = await axios.get('http://localhost:5000/gaupal/auth/profile', {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
         setUsername(response.data.fullName);
+       
         
       } catch (err) {
         console.log('Error fetching data', err);
@@ -74,11 +80,6 @@ const Sidebar = () => {
 
     fetchDetails();
   }, [])
-
-
-
-
-
 
   return (
     <>
@@ -157,33 +158,39 @@ const Sidebar = () => {
 
         {/* User Section */}
         <div className="border-t p-4">
-          <div className="flex flex-col space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-800 font-bold">
-                A
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-700">{username ? username : "username"}</p>
-                <p className="text-xs text-gray-500">Farmer</p>
-              </div>
+          <button 
+            onClick={toggleUserMenu}
+            className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-600"
+          >
+            <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-800 font-bold">
+              {username ? username.charAt(0) : "A"}
             </div>
+            <div className="flex-1 text-left">
+              <p className="text-sm font-medium text-gray-700">{username ? username : "username"}</p>
+              <p className="text-xs text-gray-500">Farmer</p>
+            </div>
+            {isUserMenuOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          </button>
               
-            <Link to="/settings" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-600">
-              <Settings size={20} />
-              <span>Settings</span>
-            </Link>
+          {isUserMenuOpen && (
+            <div className="mt-2 space-y-2">
+              <Link to="/farmer/coming-soon" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-600">
+                <Settings size={20} />
+                <span>Settings</span>
+              </Link>
 
-            <div className="px-3">
-              <LogoutButton />
+              <div className="px-3">
+                <LogoutButton />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0  bg-opacity-50 z-20 lg:hidden"
+          className="fixed inset-0 bg-opacity-50 z-20 lg:hidden"
           onClick={toggleSidebar}
         />
       )}

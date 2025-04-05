@@ -461,9 +461,9 @@ const UserDashboard = () => {
                                 <p className="text-gray-600 mb-6">
                                     Upload a photo of any cow and our AI will identify the breed, provide details about its characteristics, and suggest matching products.
                                 </p>
-                                <button className="bg-green-600 text-white font-medium py-2 px-6 rounded-md hover:bg-green-700 transition-colors duration-300">
+                                <Link to="/buyer/breed-identify" className="bg-green-600 text-white font-medium py-2 px-6 rounded-md hover:bg-green-700 transition-colors duration-300">
                                     Try Now
-                                </button>
+                                </Link>
                             </div>
                             <div className="md:w-1/2 relative h-64 md:h-auto">
                                 <img src="https://images.pexels.com/photos/4547431/pexels-photo-4547431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Cow Breed Identification" className="absolute inset-0 w-full h-full object-cover" />

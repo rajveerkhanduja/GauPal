@@ -1,33 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Search, 
-  ShoppingCart, 
-  Heart, 
-  ChevronDown, 
-  Package, 
-  Clipboard, 
+import {
+  Search,
+  ShoppingCart,
+  Heart,
+  ChevronDown,
+  Package,
+  Clipboard,
   Truck,
   User,
   Settings,
   CreditCard,
   LogOut,
-  ScanSearch
+  ScanSearch,
+  MapPin,
+  Newspaper,
+  Calendar,
+  Stethoscope
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logout from "../../components/Logout.jsx";
+import { getAuth } from "firebase/auth";
+import axios from "axios";
 
 const Navbar = () => {
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const productsDropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
-
+  const [username, setUsername] = useState(null);
+  const auth = getAuth();
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Products dropdown
       if (
-        productsDropdownRef.current && 
+        productsDropdownRef.current &&
         !productsDropdownRef.current.contains(event.target)
       ) {
         setIsProductsDropdownOpen(false);
@@ -35,49 +42,76 @@ const Navbar = () => {
 
       // User dropdown
       if (
-        userDropdownRef.current && 
+        userDropdownRef.current &&
         !userDropdownRef.current.contains(event.target)
       ) {
         setIsUserDropdownOpen(false);
       }
     };
+    const fetchDetails = async () => {
+      try {
+        const user = auth.currentUser;
+
+        if (!user) {
+          console.log('Error: Unable to find user');
+          return;
+        }
+
+        const token = await user.getIdToken();
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        setUsername(response.data.fullName);
+
+
+      } catch (err) {
+        console.log('Error fetching data', err);
+      }
+    };
+
+    fetchDetails();
+
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+
   }, []);
 
   const productItems = [
-    { icon: Package, name: 'Knowledge Center', path: '/buyer/article' },
-    { icon: Package, name: 'Events', path: '/buyer/events' },
-    { icon: Package, name: 'NGOs Near me', path: '/buyer/map' },
+    { icon: Newspaper, name: 'Knowledge Center', path: '/buyer/article' },
+    { icon: Calendar, name: 'Events', path: '/buyer/events' },
+    { icon: MapPin, name: 'NGOs Near me', path: '/buyer/map' },
     { icon: Package, name: 'Market', path: '/buyer/item-list' },
-    { icon: Package, name: 'Identify Disease', path: '/buyer/disease' },
+    { icon: Stethoscope, name: 'Identify Disease', path: '/buyer/disease' },
     { icon: ScanSearch, name: 'Identify Breed', path: '/buyer/breed-identify' },
-   
+
   ];
 
   const userMenuItems = [
-    { 
-      icon: User, 
-      label: 'Profile', 
-      path: '/profile' 
+    {
+      icon: User,
+      label: 'Profile',
+      path: '/buyer/coming-soon'
     },
-    { 
-      icon: Settings, 
-      label: 'Account Settings', 
-      path: '/settings' 
+    {
+      icon: Settings,
+      label: 'Account Settings',
+      path: '/buyer/coming-soon'
     },
-    { 
-      icon: CreditCard, 
-      label: 'Billing', 
-      path: '/billing' 
+    {
+      icon: CreditCard,
+      label: 'Billing',
+      path: '/buyer/coming-soon'
     },
-    { 
-      icon: LogOut, 
-      label: 'Logout', 
-      component: <Logout /> 
+    {
+      icon: LogOut,
+      label: 'Logout',
+      component: <Logout />
     }
   ];
 
@@ -102,16 +136,15 @@ const Navbar = () => {
 
           {/* Products Dropdown */}
           <div className="relative" ref={productsDropdownRef}>
-            <button 
+            <button
               onClick={() => setIsProductsDropdownOpen(!isProductsDropdownOpen)}
               className="flex items-center text-gray-700 hover:text-green-600 focus:outline-none"
             >
               Our Products
-              <ChevronDown 
-                size={18} 
-                className={`ml-1 transition-transform duration-200 ${
-                  isProductsDropdownOpen ? 'rotate-180' : ''
-                }`} 
+              <ChevronDown
+                size={18}
+                className={`ml-1 transition-transform duration-200 ${isProductsDropdownOpen ? 'rotate-180' : ''
+                  }`}
               />
             </button>
 
@@ -147,19 +180,18 @@ const Navbar = () => {
 
           {/* User Dropdown */}
           <div className="relative" ref={userDropdownRef}>
-            <button 
+            <button
               onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
               className="flex items-center space-x-2"
             >
               <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-800 font-bold">
                 R
               </div>
-              <span className="text-sm font-medium text-gray-700">Rajesh Kumar</span>
-              <ChevronDown 
-                size={18} 
-                className={`ml-1 transition-transform duration-200 ${
-                  isUserDropdownOpen ? 'rotate-180' : ''
-                }`} 
+              <span className="text-sm font-medium text-gray-700">{username ? username : "username"}</span>
+              <ChevronDown
+                size={18}
+                className={`ml-1 transition-transform duration-200 ${isUserDropdownOpen ? 'rotate-180' : ''
+                  }`}
               />
             </button>
 

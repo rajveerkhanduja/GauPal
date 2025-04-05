@@ -126,7 +126,7 @@ const SignupPage = () => {
         {/* Image Section */}
         <div className="hidden md:block w-1/2 relative">
           <img
-            src="/src/assets/farmer2.jpg"
+            src="/farmer2.jpg"
             alt="Farmer"
             className="absolute inset-0 w-full h-full object-cover"
           />

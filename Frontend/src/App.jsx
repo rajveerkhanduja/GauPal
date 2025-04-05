@@ -274,7 +274,11 @@ const router = createBrowserRouter([
       {
         path:"breed-identify",
         element:<CowBreedIdentifier/>
-      }
+      },
+      {
+        path:"coming-soon",
+        element: <ComingSoon/>
+      },
     ]
   },
   {
@@ -338,7 +342,15 @@ const router = createBrowserRouter([
       {
         path:"breed-identify",
         element:<CowBreedIdentifier/>
-      }
+      },
+      {
+        path: 'events',
+        element: <Events/>
+      },
+      {
+        path:"coming-soon",
+        element: <ComingSoon/>
+      },
     ]
   },
   {
