@@ -11,11 +11,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code and model
 COPY main.py /app/
-COPY model/ensemble_model_cattle_disease_prediction.pkl /app/model/ensemble_model_cattle_disease_prediction.pkl
+COPY model/cattle_predictor_v2.pkl /app/model/cattle_predictor_v2.pkl
 
 # Expose port 7000
-EXPOSE 8080
+EXPOSE 8060
 
 # Command to run FastAPI server
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8060"]

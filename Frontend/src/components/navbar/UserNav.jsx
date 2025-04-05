@@ -48,10 +48,11 @@ const Navbar = () => {
   }, []);
 
   const productItems = [
-    { icon: Package, name: 'Fresh Milk', path: '/products/milk' },
-    { icon: Package, name: 'Cheese', path: '/products/cheese' },
-    { icon: Package, name: 'Yogurt', path: '/products/yogurt' },
-    { icon: Package, name: 'Butter', path: '/products/butter' },
+    { icon: Package, name: 'Knowledge Center', path: '/buyer/article' },
+    { icon: Package, name: 'Events', path: '/buyer/events' },
+    { icon: Package, name: 'NGOs Near me', path: '/buyer/map' },
+    { icon: Package, name: 'Market', path: '/buyer/item-list' },
+    { icon: Package, name: 'Identify Disease', path: '/buyer/disease' },
    
   ];
 
@@ -85,7 +86,7 @@ const Navbar = () => {
           <span className="h-8 w-8 rounded-full bg-green-600 flex items-center justify-center text-white font-bold mr-3">
             G
           </span>
-          <h1 className="text-xl font-bold text-gray-800">GauShala Marketplace</h1>
+          <Link to="/buyer/dashboard" className="text-xl font-bold text-gray-800">GauPal</Link>
         </div>
         <div className="flex items-center space-x-6">
           <div className="relative">

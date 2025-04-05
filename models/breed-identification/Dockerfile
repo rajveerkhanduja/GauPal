@@ -32,7 +32,7 @@ RUN mkdir -p uploads && \
     chmod -R 755 uploads
 
 # Expose the application port
-EXPOSE 8090
+EXPOSE 8080
 
 # Command to run the FastAPI application with Uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8090"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

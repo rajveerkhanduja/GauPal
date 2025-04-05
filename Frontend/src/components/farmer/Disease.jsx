@@ -124,7 +124,7 @@ const DiseasePrediction = () => {
 
     try {
       // Send image to prediction endpoint
-      const predictionResponse = await axios.post('https://mobilenet-api-215968384023.asia-south1.run.app/predict/', formData, {
+      const predictionResponse = await axios.post('http://localhost:8080/predict/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 

@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from typing import List
 import joblib
 import numpy as np
+import uvicorn
+import os
 from fastapi.middleware.cors import CORSMiddleware  # Import the CORS middleware
 
 # Load the trained model from the .pkl file
@@ -65,3 +67,8 @@ def predict_disease(input_data: SymptomInput):
 @app.get("/")
 def read_root():
     return {"status": "Cattle Disease Prediction API is running"}
+
+if __name__ == "__main__":
+    
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)

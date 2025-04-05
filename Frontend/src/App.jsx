@@ -18,6 +18,7 @@ import ArticleListing from './components/common/ArticleListing.jsx';
 import Article from  "./components/common/Article.jsx";
 import Events from "./components/common/EventList.jsx"
 import IdentifyDisease from './layouts/IdentifyDisease.jsx';
+import ComingSoon from "./pages/ComingSoon.jsx"
 
 // farmer imports 
 import Farmer from "./layouts/Farmer.jsx"
@@ -236,6 +237,10 @@ const router = createBrowserRouter([
         element: <IdentifyDisease />,
         children: [
           {
+            index: true,
+            element: <Navigate to="image" replace />
+          },
+          {
             path: "image",
             element: <FindDisease />
           },
@@ -284,10 +289,6 @@ const router = createBrowserRouter([
         element: <ChatBot />
       },
       {
-        path: "article/:article-id",
-        element: <Article />
-      },
-      {
         path: "breed",
         element: <ExploreBreed />
       },
@@ -310,6 +311,24 @@ const router = createBrowserRouter([
       {
         path: "map",
         element: <BuyerGoogleMap/>
+      },
+      {
+        path: 'disease',
+        element: <IdentifyDisease />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="image" replace />
+          },
+          {
+            path: "image",
+            element: <FindDisease />
+          },
+          {
+            path: "question",
+            element: <Diseaseqna />
+          }
+        ]
       }
     ]
   },
@@ -320,6 +339,10 @@ const router = createBrowserRouter([
   {
     path: "/loading",
     element: <FullScreenLoader />
+  },
+  {
+    path:"/coming-soon",
+    element: <ComingSoon/>
   }
 ]);
 

@@ -242,9 +242,9 @@ const UserDashboard = () => {
                                     Discover authentic products from India's indigenous cow breeds. Support local farmers and preserve our heritage.
                                 </p>
                                 <div className="flex space-x-4">
-                                    <button className="bg-white text-green-700 font-medium py-2 px-4 rounded-md hover:bg-green-50">
+                                    <Link to="/buyer/item-list" className="bg-white text-green-700 font-medium py-2 px-4 rounded-md hover:bg-green-50">
                                         Shop Now
-                                    </button>
+                                    </Link>
                                     <button className="bg-transparent text-white border border-white font-medium py-2 px-4 rounded-md hover:bg-green-600">
                                         Learn More
                                     </button>
@@ -391,9 +391,9 @@ const UserDashboard = () => {
                         <div>
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-bold text-gray-800">Top Sellers</h2>
-                                <button className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
+                                <Link to="/coming-soon" className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
                                     View All <ChevronRight size={16} className="ml-1" />
-                                </button>
+                                </Link>
                             </div>
                             <div className="bg-white rounded-lg shadow-sm p-4">
                                 {topSellers.map((seller, index) => (
@@ -426,9 +426,9 @@ const UserDashboard = () => {
                     <div className="mb-12">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-bold text-gray-800">Knowledge Center</h2>
-                            <button className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
+                            <Link to="/buyer/article" className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
                                 View All Articles <ChevronRight size={16} className="ml-1" />
-                            </button>
+                            </Link>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {articles.map((article) => (
