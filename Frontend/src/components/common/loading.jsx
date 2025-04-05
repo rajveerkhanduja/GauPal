@@ -84,10 +84,5 @@ export const MinimalLoader = ({ size = 24 }) => {
   );
 };
 
-export default {
-  FullScreenLoader,
-  InlineLoader,
-  OverlayLoader,
-  ButtonLoader,
-  MinimalLoader
-};
+// Change the default export to export the FullScreenLoader
+export default FullScreenLoader;

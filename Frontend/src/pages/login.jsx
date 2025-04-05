@@ -152,6 +152,31 @@ const LoginPage = () => {
               </button>
             </form>
             
+            {/* Demo credentials */}
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Demo Credentials</h3>
+              <div className="space-y-3 text-sm">
+                <div className="p-2 rounded bg-white">
+                  <p className="font-medium text-gray-700">Farmer Account</p>
+                  <div className="mt-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">farmer@gmail.com</span>
+                      <span className="text-gray-600">SecurePass123!</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-2 rounded bg-white">
+                  <p className="font-medium text-gray-700">Buyer Account</p>
+                  <div className="mt-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">buyer@gmail.com</span>
+                      <span className="text-gray-600">SecurePass123!</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6 text-center">
               <p className="text-gray-600">
                 Don't have an account?{' '}
