@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/Login.jsx';
+import LoginPage from './pages/login.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import NotFoundPage from './pages/NoFound.jsx';
 import { AuthProvider } from './utils/AuthProvider.jsx';
