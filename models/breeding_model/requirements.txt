@@ -1,6 +1,10 @@
 fastapi
 uvicorn
-pydantic
+pandas
 numpy
 scikit-learn
+pydantic
+joblib
 python-multipart
+aiofiles
+typing-extensions

@@ -22,7 +22,7 @@ const LoginPage = () => {
       const idToken = await userCredential.user.getIdToken();
       
       // Then, authenticate with your backend
-      const response = await axios.post('http://localhost:5000/gaupal/auth/login', {
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/login`, {
         email,
         password,
         idToken

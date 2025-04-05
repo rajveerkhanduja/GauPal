@@ -26,7 +26,7 @@ const BreedsListPage = () => {
         const token = await user.getIdToken();
 
         // Fetch all breeds
-        const response = await axios.get('http://localhost:5000/gaupal/article/all-breed', {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/all-breed`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

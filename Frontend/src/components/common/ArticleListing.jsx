@@ -60,7 +60,7 @@ const ArticleListing = () => {
       const textsToTranslate = Object.values(textContent);
       
       const response = await axios.post(
-        `https://translation.googleapis.com/language/translate/v2?key=${process.env.BITE_GOOGLE_TRANSLATE_KEY}`,
+        `https://translation.googleapis.com/language/translate/v2?key=${import.meta.env.BITE_GOOGLE_TRANSLATE_KEY}`,
         {
           q: textsToTranslate,
           target: selectedLanguage,
@@ -92,7 +92,7 @@ const ArticleListing = () => {
     
     try {
       const response = await axios.post(
-        `https://translation.googleapis.com/language/translate/v2?key=${process.env.VITE_GOOGLE_TRANSLATE_KEY}`,
+        `https://translation.googleapis.com/language/translate/v2?key=${import.meta.env.VITE_GOOGLE_TRANSLATE_KEY}`,
         {
           q: [text],
           target: targetLanguage,
@@ -141,7 +141,7 @@ const ArticleListing = () => {
     // Fetch available categories for the filter dropdown
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/gaupal/article/category', {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/category`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -197,7 +197,7 @@ const ArticleListing = () => {
   const fetchArticles = async (page, categoryFilter) => {
     setLoading(true);
     try {
-      let url = `http://localhost:5000/gaupal/article/all-article?page=${page}&limit=${pagination.perPage}`;
+      let url = `${import.meta.env.VITE_SERVER_URL}/gaupal/article/all-article?page=${page}&limit=${pagination.perPage}`;
 
       const user = auth.currentUser;
       const token = await user.getIdToken();

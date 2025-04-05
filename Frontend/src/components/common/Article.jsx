@@ -19,7 +19,7 @@ const ArticleDetail = () => {
 
         const user = auth.currentUser;
         const token = await user.getIdToken();
-        const response = await axios.get(`http://localhost:5000/gaupal/article/article/${articleId}`, {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/article/${articleId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

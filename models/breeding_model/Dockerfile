@@ -14,7 +14,7 @@ COPY main.py /app/
 COPY model/cattle_predictor_v2.pkl /app/model/cattle_predictor_v2.pkl
 
 # Expose port 7000
-EXPOSE 8060
+EXPOSE 8080
 
 # Command to run FastAPI server
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8060"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

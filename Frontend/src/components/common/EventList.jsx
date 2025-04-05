@@ -172,7 +172,7 @@ const EventBentoBox = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/gaupal/events?page=${page}&limit=6`);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/events?page=${page}&limit=6`);
         setEvents(response.data.data);
         setTotalPages(response.data.pagination.totalPages);
       } catch (err) {

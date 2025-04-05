@@ -55,7 +55,7 @@ const SignupPage = () => {
       const idToken = await userCredential.user.getIdToken();
       
       // Register user in your backend
-      const response = await axios.post('http://localhost:5000/gaupal/auth/signup', {
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/signup`, {
         email: formData.email,
         password: formData.password,
         fullName: formData.fullName,
