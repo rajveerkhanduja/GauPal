@@ -7,11 +7,7 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-<<<<<<< HEAD
-  "author": "",
-=======
   "author": "Siba Sundar, Rajveer Singh, Vishakha Bhandari, Khushi Dixit",
->>>>>>> 9d504660c2f7f99fb3bd18077c162d5d5abc7864
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^7.15.2",

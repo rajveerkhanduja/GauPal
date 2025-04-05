@@ -12,7 +12,7 @@ import { AuthProvider } from './utils/AuthProvider.jsx';
 import ChatBot from "./components/ChatBot.jsx"
 import Landing from './pages/Landing.jsx';
 import ExploreBreed from "./components/common/ExploreBreed.jsx"
-import Loading from './components/common/loading.jsx'; // Fixed capitalization
+import { FullScreenLoader } from './components/common/loading.jsx'; // Fixed capitalization
 import SettingsPage from './components/common/Settings.jsx';
 import ArticleListing from './components/common/ArticleListing.jsx';
 import Article from  "./components/common/Article.jsx";
@@ -88,12 +88,12 @@ const PublicRoute = ({ children }) => {
   const [authChecked, setAuthChecked] = React.useState(false);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [userType, setUserType] = React.useState(null);
+  const location = window.location.pathname;  // Get current path
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsAuthenticated(true);
-        // Check user type from localStorage
         try {
           const userString = localStorage.getItem('user');
           if (userString) {
@@ -114,20 +114,20 @@ const PublicRoute = ({ children }) => {
   }, [auth]);
 
   if (!authChecked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <FullScreenLoader />;
   }
 
-  if (isAuthenticated) {
+  // Allow access to landing page even when authenticated
+  if (location === '/' && isAuthenticated) {
+    return children;
+  }
+
+  // Redirect to appropriate dashboard if authenticated and trying to access login/signup
+  if (isAuthenticated && (location === '/login' || location === '/signup')) {
     if (userType === 'farmer') {
       return <Navigate to="/farmer/dashboard" replace />;
     } else if (userType === 'buyer') {
       return <Navigate to="/buyer/dashboard" replace />;
-    } else {
-      return <Navigate to="/loading" replace />;
     }
   }
 
@@ -181,7 +181,7 @@ const UserTypeRoute = ({ children, allowedType }) => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute><Landing /></ProtectedRoute>
+    element: <PublicRoute><Landing /></PublicRoute>  // Changed from ProtectedRoute to PublicRoute
   },
   {
     path: "/login",
@@ -319,7 +319,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/loading",
-    element: <Loading />
+    element: <FullScreenLoader />
   }
 ]);
 

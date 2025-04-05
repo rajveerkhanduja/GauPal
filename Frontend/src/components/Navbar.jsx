@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ShoppingCart, User as UserIcon, ChevronDown, Globe } from "lucide-react";
+import { User as UserIcon, ChevronDown, Globe } from "lucide-react";
 import logo from '../assets/6.png';
 
 // Define the text that needs to be translated
@@ -234,10 +234,6 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-
-            <Link to="/cart" className="text-gray-700 hover:text-green-600">
-              <ShoppingCart className="h-6 w-6" />
-            </Link>
 
             {user ? (
               <Link
