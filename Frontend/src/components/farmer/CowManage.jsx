@@ -80,12 +80,12 @@ const CattleManagementDashboard = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
-    
+
     // If it's a Firestore Timestamp object
     if (timestamp._seconds) {
       return new Date(timestamp._seconds * 1000).toLocaleDateString();
     }
-    
+
     // If it's already a string date
     return new Date(timestamp).toLocaleDateString();
   };
@@ -126,6 +126,35 @@ const CattleManagementDashboard = () => {
       // Set an empty array to prevent map errors
       setBreedingRecommendations([]);
     }
+  };
+
+
+  const handleHealthStatusChange = (e) => {
+    const status = e.target.value;
+    setNewCattleForm(prev => {
+      // If health status is set to "healthy", reset disease to "None"
+      if (status === "healthy") {
+        return { ...prev, healthStatus: status, disease: "None", customDisease: "" };
+      }
+      // Otherwise just update the health status
+      return { ...prev, healthStatus: status };
+    });
+  };
+
+  const handleDiseaseChange = (e) => {
+    const diseaseValue = e.target.value;
+    setNewCattleForm(prev => {
+      // If a disease other than "None" or "Healthy Cows" is selected, update health status
+      if (diseaseValue !== "None" && diseaseValue !== "Healthy Cows") {
+        return {
+          ...prev,
+          disease: diseaseValue,
+          healthStatus: "sick"
+        };
+      }
+      // Otherwise just update the disease
+      return { ...prev, disease: diseaseValue };
+    });
   };
 
 
@@ -319,24 +348,18 @@ const CattleManagementDashboard = () => {
                   </span>
                 </td>
                 <td className="p-3">{cattle.disease}</td>
-                <td className="p-3 flex space-x-2">
-                  <button
-                    onClick={() => {
-                      setSelectedCattle(cattle);
-                      setIsVaccinationModalOpen(true);
-                    }}
-                    className="text-blue-500 hover:bg-blue-50 p-1 rounded"
-                  >
-                    <PlusIcon size={16} />
-                  </button>
+                <td className="p-3">
                   <button
                     onClick={() => {
                       setSelectedCattle(cattle);
                       setIsDetailModalOpen(true);
                     }}
-                    className="text-green-500 hover:bg-green-50 p-1 rounded"
+                    className={`px-3 py-1 rounded-md text-white ${cattle.disease !== 'None' && cattle.disease !== 'Healthy Cows'
+                      ? 'bg-yellow-500 hover:bg-yellow-600'
+                      : 'bg-green-500 hover:bg-green-600'
+                      }`}
                   >
-                    <InfoIcon size={16} />
+                    View Details
                   </button>
                 </td>
               </tr>
@@ -347,8 +370,8 @@ const CattleManagementDashboard = () => {
 
       {/* Detailed Cattle View Modal */}
       {isDetailModalOpen && selectedCattle && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg w-3/4 max-h-[80vh] relative flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] relative flex flex-col">
             {/* Close Button */}
             <button
               onClick={() => setIsDetailModalOpen(false)}
@@ -357,73 +380,186 @@ const CattleManagementDashboard = () => {
               <XIcon size={24} />
             </button>
 
-            <h2 className="text-xl font-semibold mb-4 p-4 border-b">
-              Cattle Details: {selectedCattle.name}
-            </h2>
+            {/* Header with disease warning if applicable */}
+            <div className="p-4 border-b">
+              <h2 className="text-xl font-semibold">
+                Cattle Details: {selectedCattle.name}
+              </h2>
+
+              {/* Disease Warning Banner */}
+              {selectedCattle.disease &&
+                selectedCattle.disease !== 'None' &&
+                selectedCattle.disease !== 'Healthy Cows' && (
+                  <div className="mt-2 bg-yellow-50 border-l-4 border-yellow-400 p-3 flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-yellow-700">
+                        This animal has been diagnosed with <strong>{selectedCattle.disease}</strong>.
+                        Take precautions when handling and consult a veterinarian.
+                      </p>
+                    </div>
+                  </div>
+                )}
+            </div>
 
             {/* Detailed Information Container */}
-            <div className="overflow-y-auto flex-grow p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Basic Information Column */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-green-700">Basic Information</h3>
-                <div className="space-y-2">
-                  <p><strong>Name:</strong> {selectedCattle.name}</p>
-                  <p><strong>Breed:</strong> {selectedCattle.breed}</p>
-                  <p><strong>Gender:</strong> {selectedCattle.gender}</p>
-                  <p><strong>Age:</strong> {selectedCattle.age} years</p>
-                  <p><strong>Color:</strong> {selectedCattle.color}</p>
+            <div className="overflow-y-auto flex-grow p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Basic Information Column */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3 text-green-700 border-b pb-2">Basic Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="font-medium">Name:</span>
+                      <span>{selectedCattle.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Breed:</span>
+                      <span>{selectedCattle.breed}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Gender:</span>
+                      <span>{selectedCattle.gender}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Age:</span>
+                      <span>{selectedCattle.age} years</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Color:</span>
+                      <span>{selectedCattle.color || 'Not specified'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Weight:</span>
+                      <span>{selectedCattle.weight ? `${selectedCattle.weight} kg` : 'Not specified'}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Health Information Column */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-green-700">Health Information</h3>
-                <div className="space-y-2">
-                  <p>
-                    <strong>Health Status:</strong>{' '}
-                    <span className={`
-                      px-2 py-1 rounded-full text-xs 
-                      ${selectedCattle.healthStatus === 'healthy' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-                    `}>
-                      {selectedCattle.healthStatus}
-                    </span>
-                  </p>
-                  <p><strong>Disease:</strong> {selectedCattle.disease}</p>
-                  <p><strong>Last Veterinary Checkup:</strong> {formatDate(selectedCattle.lastVeterinaryCheckup)}</p>
+                {/* Health Information Column */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3 text-green-700 border-b pb-2">Health Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">Health Status:</span>
+                      <span className={`
+                  px-2 py-1 rounded-full text-xs 
+                  ${selectedCattle.healthStatus === 'healthy' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                `}>
+                        {selectedCattle.healthStatus}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Disease:</span>
+                      <span className={`
+                  ${selectedCattle.disease !== 'None' && selectedCattle.disease !== 'Healthy Cows' ? 'text-red-600 font-medium' : 'text-green-600'}
+                `}>
+                        {selectedCattle.disease || 'None'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Last Veterinary Checkup:</span>
+                      <span>{formatDate(selectedCattle.lastVeterinaryCheckup)}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Additional Details Column */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-green-700">Additional Details</h3>
-                <div className="space-y-2">
-                  <p><strong>Ear Tag:</strong> {selectedCattle.earTag || 'N/A'}</p>
-                  <p><strong>Paddock Location:</strong> {selectedCattle.paddockLocation || 'N/A'}</p>
-                  <p><strong>Special Notes:</strong> {selectedCattle.specialNotes || 'None'}</p>
+                {/* Vaccination History */}
+                <div className="bg-gray-50 p-4 rounded-lg col-span-1 md:col-span-2">
+                  <h3 className="text-lg font-semibold mb-3 text-green-700 border-b pb-2">Vaccination History</h3>
+                  {selectedCattle.vaccinations && selectedCattle.vaccinations.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead>
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vaccine Name</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Administered</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Due Date</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {selectedCattle.vaccinations.map((vaccine, index) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 whitespace-nowrap">{vaccine.name}</td>
+                              <td className="px-4 py-2 whitespace-nowrap">{formatDate(vaccine.date)}</td>
+                              <td className="px-4 py-2 whitespace-nowrap">
+                                {vaccine.nextDueDate ? formatDate(vaccine.nextDueDate) : 'Not scheduled'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 italic">No vaccination records found.</p>
+                  )}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => {
+                        setIsDetailModalOpen(false);
+                        setIsVaccinationModalOpen(true);
+                      }}
+                      className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none"
+                    >
+                      <PlusIcon className="mr-2 h-4 w-4" /> Add Vaccination
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              {/* Action Column */}
-              <div className="flex flex-col space-y-4">
-                <button
-                  onClick={() => fetchBreedingRecommendations(selectedCattle.breed)}
-                  className="flex items-center justify-center bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                >
-                  <HeartIcon className="mr-2" /> Find Breeding Pair
-                </button>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => {/* Implement edit logic */ }}
-                    className="flex-1 flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                  >
-                    <EditIcon className="mr-2" /> Edit
-                  </button>
-                  <button
-                    onClick={handleDeleteCattle}
-                    className="flex-1 flex items-center justify-center bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                  >
-                    <TrashIcon className="mr-2" /> Delete
-                  </button>
+                {/* Additional Details Column */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3 text-green-700 border-b pb-2">Additional Details</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="font-medium">Ear Tag:</span>
+                      <span>{selectedCattle.earTag || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Paddock Location:</span>
+                      <span>{selectedCattle.paddockLocation || 'N/A'}</span>
+                    </div>
+                    <div className="mt-2">
+                      <span className="font-medium">Special Notes:</span>
+                      <p className="mt-1 text-gray-600">{selectedCattle.specialNotes || 'None'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Column */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3 text-green-700 border-b pb-2">Actions</h3>
+                  <div className="flex flex-col space-y-4">
+                    <button
+                      onClick={() => fetchBreedingRecommendations(selectedCattle.breed)}
+                      className="flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      disabled={selectedCattle.disease !== 'None' && selectedCattle.disease !== 'Healthy Cows'}
+                    >
+                      <HeartIcon className="mr-2" /> Find Breeding Pair
+                    </button>
+                    {selectedCattle.disease !== 'None' && selectedCattle.disease !== 'Healthy Cows' && (
+                      <p className="text-xs text-red-500 italic">
+                        Breeding is not recommended for animals with active diseases.
+                      </p>
+                    )}
+                    <div className="grid grid-cols-2 gap-3 mt-2">
+                      <button
+                        onClick={() => {/* Implement edit logic */ }}
+                        className="flex items-center justify-center bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
+                      >
+                        <EditIcon className="mr-2" /> Edit
+                      </button>
+                      <button
+                        onClick={handleDeleteCattle}
+                        className="flex items-center justify-center bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                      >
+                        <TrashIcon className="mr-2" /> Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -603,26 +739,37 @@ const CattleManagementDashboard = () => {
                   <select
                     name="healthStatus"
                     value={newCattleForm.healthStatus}
-                    onChange={(e) => setNewCattleForm({ ...newCattleForm, healthStatus: e.target.value })}
+                    onChange={handleHealthStatusChange}
                     className="w-full p-2 border border-gray-300 rounded-md"
                   >
                     <option value="healthy">Healthy</option>
                     <option value="sick">Sick</option>
                     <option value="recovering">Recovering</option>
                   </select>
+                  {newCattleForm.healthStatus === "healthy" && (
+                    <p className="text-xs text-gray-500 mt-1">Healthy cattle cannot have diseases.</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Disease</label>
                   <select
                     name="disease"
                     value={newCattleForm.disease}
-                    onChange={(e) => setNewCattleForm({ ...newCattleForm, disease: e.target.value })}
+                    onChange={handleDiseaseChange}
                     className="w-full p-2 border border-gray-300 rounded-md"
+                    disabled={newCattleForm.healthStatus === "healthy"}
                   >
-                    {DISEASE_OPTIONS.map(disease => (
-                      <option key={disease} value={disease}>{disease}</option>
-                    ))}
+                    {newCattleForm.healthStatus === "healthy" ? (
+                      <option value="None">None</option>
+                    ) : (
+                      DISEASE_OPTIONS.filter(disease => disease !== "Healthy Cows").map(disease => (
+                        <option key={disease} value={disease}>{disease}</option>
+                      ))
+                    )}
                   </select>
+                  {newCattleForm.healthStatus !== "healthy" && !newCattleForm.disease && (
+                    <p className="text-xs text-red-500 mt-1">Please select a disease for non-healthy cattle.</p>
+                  )}
                 </div>
                 {newCattleForm.disease === 'Other' && (
                   <div className="col-span-1 md:col-span-3">
@@ -647,6 +794,26 @@ const CattleManagementDashboard = () => {
                     className="w-full p-2 border border-gray-300 rounded-md"
                   />
                 </div>
+                {/* Add the data inconsistency warning right here */}
+                {selectedCattle.healthStatus === "healthy" && selectedCattle.disease !== "None" && selectedCattle.disease !== "Healthy Cows" && (
+                  <div className="col-span-1 md:col-span-2 mt-4">
+                    <div className="bg-red-50 border-l-4 border-red-400 p-4">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-red-700">
+                            <strong>Data Inconsistency:</strong> This cattle is marked as healthy but has a disease.
+                            Please update the health status or disease information.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Additional Details */}
                 <div className="col-span-1 md:col-span-3 mt-4">

@@ -10,7 +10,8 @@ import {
   User,
   Settings,
   CreditCard,
-  LogOut
+  LogOut,
+  ScanSearch
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logout from "../../components/Logout.jsx";
@@ -53,6 +54,7 @@ const Navbar = () => {
     { icon: Package, name: 'NGOs Near me', path: '/buyer/map' },
     { icon: Package, name: 'Market', path: '/buyer/item-list' },
     { icon: Package, name: 'Identify Disease', path: '/buyer/disease' },
+    { icon: ScanSearch, name: 'Identify Breed', path: '/buyer/breed-identify' },
    
   ];
 

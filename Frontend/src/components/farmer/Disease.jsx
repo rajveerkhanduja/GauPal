@@ -124,7 +124,7 @@ const DiseasePrediction = () => {
 
     try {
       // Send image to prediction endpoint
-      const predictionResponse = await axios.post('http://localhost:8080/predict/', formData, {
+      const predictionResponse = await axios.post(`${import.meta.env.VITE_DISEASE_IDENTIFICATION_MODEL}/predict/`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 

@@ -16,7 +16,8 @@ import {
   Newspaper,
   MapPin,
   Package,
-  ListOrdered
+  ListOrdered,
+  ScanSearch
 } from 'lucide-react';
 import axios from "axios";
 import LogoutButton from '../Logout.jsx';
@@ -33,6 +34,7 @@ const Sidebar = () => {
     { icon: Home, label: 'Manage Cows', path: '/farmer/manage-cow' },
     { icon: ListOrdered, label: 'Orders', path: '/orders' },
     { icon: Stethoscope, label: 'Identify Disease', path: '/farmer/disease' },
+    { icon: ScanSearch, label: 'Identify Breed', path: '/farmer/breed-identify' },
     { icon: Newspaper, label: 'Articles', path: '/farmer/article' },
     { icon: MapPin, label: 'Vet Near Me', path: '/farmer/map' },
   ];

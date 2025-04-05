@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, Clock, MapPin } from 'lucide-react';
+import { ChevronLeft, Clock, MapPin ,  Calendar, ChevronRight, TrendingUp, Package, Tag} from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
-import { Calendar, ChevronRight, TrendingUp, Package, Tag } from 'lucide-react';
+
 
 import ChatbotComponent from '../ChatBot.jsx';
 import { MessageCircle, X, Minus } from 'lucide-react';

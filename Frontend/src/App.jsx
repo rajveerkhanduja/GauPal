@@ -19,6 +19,7 @@ import Article from  "./components/common/Article.jsx";
 import Events from "./components/common/EventList.jsx"
 import IdentifyDisease from './layouts/IdentifyDisease.jsx';
 import ComingSoon from "./pages/ComingSoon.jsx"
+import CowBreedIdentifier from './components/common/BreedIdentify.jsx';
 
 // farmer imports 
 import Farmer from "./layouts/Farmer.jsx"
@@ -269,6 +270,10 @@ const router = createBrowserRouter([
       {
         path: "map",
         element: <FarmerMap/>
+      },
+      {
+        path:"breed-identify",
+        element:<CowBreedIdentifier/>
       }
     ]
   },
@@ -329,6 +334,10 @@ const router = createBrowserRouter([
             element: <Diseaseqna />
           }
         ]
+      },
+      {
+        path:"breed-identify",
+        element:<CowBreedIdentifier/>
       }
     ]
   },
@@ -343,7 +352,8 @@ const router = createBrowserRouter([
   {
     path:"/coming-soon",
     element: <ComingSoon/>
-  }
+  },
+  
 ]);
 
 // Main App component

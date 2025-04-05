@@ -68,7 +68,7 @@ const SymptomForm = () => {
     setPrediction(null);
 
     try {
-      const response = await fetch('http://localhost:8070/predict', {
+      const response = await fetch(`${import.meta.env.VITE_DISEASE_QNA}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
