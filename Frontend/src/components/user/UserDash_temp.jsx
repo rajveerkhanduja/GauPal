@@ -604,7 +604,7 @@ const UserDashboard = () => {
                         <div
                             className="bg-green-500 text-white p-3 rounded-t-lg flex justify-between items-center"
                         >
-                            <span className="font-semibold">Customer Support</span>
+                            <span className="font-semibold">GauGuru Assistant</span>
                             <div className="flex space-x-2">
                                 <button
                                     onClick={toggleChat}
@@ -612,12 +612,7 @@ const UserDashboard = () => {
                                 >
                                     <Minus size={20} />
                                 </button>
-                                <button
-                                    onClick={closeChat}
-                                    className="hover:bg-red-600 p-1 rounded"
-                                >
-                                    <X size={20} />
-                                </button>
+                                
                             </div>
                         </div>
                         <div className="h-[80vh]">

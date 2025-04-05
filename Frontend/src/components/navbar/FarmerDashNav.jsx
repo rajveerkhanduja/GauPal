@@ -32,7 +32,7 @@ const Sidebar = () => {
     { icon: Home, label: 'Dashboard', path: '/farmer/dashboard' },
     { icon: Home, label: 'Manage Cows', path: '/farmer/manage-cow' },
     { icon: ListOrdered, label: 'Orders', path: '/orders' },
-    { icon: Stethoscope, label: 'Predict Disease', path: '/farmer/disease' },
+    { icon: Stethoscope, label: 'Identify Disease', path: '/farmer/disease' },
     { icon: Newspaper, label: 'Articles', path: '/farmer/article' },
     { icon: MapPin, label: 'Vet Near Me', path: '/farmer/map' },
   ];

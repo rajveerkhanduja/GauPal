@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ShoppingCart, User as UserIcon, ChevronDown, Globe } from "lucide-react";
@@ -43,8 +43,8 @@ const Navbar = () => {
     { code: 'as', name: 'Assamese' },
   ];
 
-  // Function to translate text using Google Translate API
-  const translateText = async (text, targetLang) => {
+  // Function to translate text using Google Translate API - wrapped in useCallback
+  const translateText = useCallback(async (text, targetLang) => {
     // Skip translation if target language is English or if text is empty
     if (targetLang === 'en' || !text) {
       return text;
@@ -52,7 +52,7 @@ const Navbar = () => {
 
     try {
       // Replace with your actual Google Translate API endpoint and key
-      const apiKey = 'YOUR_GOOGLE_TRANSLATE_API_KEY';
+      const apiKey = import.meta.env.VITE_GOOGLE_TRANSLATE_KEY;
       const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
       
       const response = await fetch(url, {
@@ -78,10 +78,10 @@ const Navbar = () => {
       console.error('Translation error:', error);
       return text; // Fallback to original text if translation fails
     }
-  };
+  }, []);
 
-  // Function to translate all navbar text elements
-  const translateAllText = async (targetLang) => {
+  // Function to translate all navbar text elements - wrapped in useCallback
+  const translateAllText = useCallback(async (targetLang) => {
     // Skip translation if target language is English
     if (targetLang === 'en') {
       setTranslatedText({...navbarTextKeys});
@@ -107,7 +107,7 @@ const Navbar = () => {
     } finally {
       setIsTranslating(false);
     }
-  };
+  }, [translateText]); // Add translateText as a dependency
 
   // Load the saved language from local storage on component mount
   useEffect(() => {
@@ -116,7 +116,7 @@ const Navbar = () => {
     
     // Translate all text to the saved language on initial load
     translateAllText(savedLanguage);
-  }, []);
+  }, [translateAllText]); // Add translateAllText as a dependency
 
   // Function to handle language change
   const handleLanguageChange = (languageCode) => {

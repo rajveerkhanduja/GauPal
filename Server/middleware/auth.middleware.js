@@ -29,7 +29,11 @@ exports.verifyToken = async (req, res, next) => {
     // Call next middleware
     next();
   } catch (error) {
+<<<<<<< HEAD
     return res.status(401).json({ message: 'Invalid token' });
+=======
+    return res.status(401).json({ message: 'Invalid token ' });
+>>>>>>> 9d504660c2f7f99fb3bd18077c162d5d5abc7864
   }
 };
 

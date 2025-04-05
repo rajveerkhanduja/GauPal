@@ -6,7 +6,11 @@ import numpy as np
 from fastapi.middleware.cors import CORSMiddleware  # Import the CORS middleware
 
 # Load the trained model from the .pkl file
+<<<<<<< HEAD
 model = joblib.load("ensemble_model_cattle_disease_prediction.pkl")
+=======
+model = joblib.load("model/ensemble_model_cattle_disease_prediction.pkl")
+>>>>>>> 9d504660c2f7f99fb3bd18077c162d5d5abc7864
 
 # Define a FastAPI app
 app = FastAPI()
@@ -40,6 +44,11 @@ symptom_list = ['anorexia', 'abdominal_pain', 'anaemia', 'abortions', 'acetone',
 class SymptomInput(BaseModel):
     symptoms: List[str]
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 9d504660c2f7f99fb3bd18077c162d5d5abc7864
 @app.post("/predict")
 def predict_disease(input_data: SymptomInput):
     symptoms = input_data.symptoms
@@ -54,10 +63,18 @@ def predict_disease(input_data: SymptomInput):
     
     # Predict the disease (using the trained model)
     prediction = model.predict([input_vector])
+<<<<<<< HEAD
     disease = prediction[0]
     
     return {"prediction": disease}
 
+=======
+    disease = int(prediction[0])  # Convert numpy.int64 to Python int
+    
+    return {"prediction": disease}
+
+
+>>>>>>> 9d504660c2f7f99fb3bd18077c162d5d5abc7864
 # Health check endpoint
 @app.get("/")
 def read_root():

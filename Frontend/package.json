@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "author":"Siba Sundar, Rajveer Singh, Vishakha Bhandari, Khushi Dixit",
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@react-google-maps/api": "^2.20.6",

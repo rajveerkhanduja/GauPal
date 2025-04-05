@@ -12,7 +12,7 @@ export default function GoogleMapView() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAyz0KbO8Wr6hnOFl3BvnVamL12W-dZ64o",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API,
     libraries
   });
 
