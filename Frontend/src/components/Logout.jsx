@@ -20,7 +20,7 @@ const LogoutButton = ({ className }) => {
         const idToken = await user.getIdToken();
         
         // Call the backend logout endpoint
-        await axios.post('http://localhost:5000/gaupal/auth/logout', {}, {
+        await axios.post(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/logout`, {}, {
           headers: {
             Authorization: `Bearer ${idToken}` // Include token in the Authorization header
           }

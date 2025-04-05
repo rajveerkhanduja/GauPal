@@ -22,7 +22,7 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/gaupal/products/${productId}`);
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/products/${productId}`);
                 setProduct(response.data);
 
                 // Set initial category filter based on product category
@@ -47,7 +47,7 @@ const ProductDetail = () => {
             if (!product) return;
 
             try {
-                const response = await axios.get('http://localhost:5000/gaupal/products', {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/products`, {
                     params: {
                         category: filters.category,
                         minPrice: filters.minPrice,

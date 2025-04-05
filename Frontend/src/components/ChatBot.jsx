@@ -43,7 +43,7 @@ const ChatBot = () => {
   const fetchGreeting = async () => {
     try {
       console.log('Fetching greeting...');
-      const response = await fetch('http://localhost:5000/gauguru/greeting');
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/gauguru/greeting`);
       const data = await response.json();
       console.log('Greeting response:', data);
       
@@ -128,7 +128,7 @@ const ChatBot = () => {
       console.log('Request payload:', JSON.stringify(requestBody));
 
       // Send request to the API
-      const response = await fetch('http://localhost:5000/gauguru/chat', {
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/gauguru/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
@@ -187,7 +187,7 @@ const ChatBot = () => {
       console.log('Streaming request payload:', JSON.stringify(requestBody));
 
       // Send POST request for streaming
-      const response = await fetch('http://localhost:5000/gauguru/chat?stream=true', {
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/gauguru/chat?stream=true`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -121,7 +121,7 @@ const ProductForm = () => {
       });
       
       // Send the form data to the server with the auth token
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/gaupal/farmer/add-product`, {
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/gaupal/farmer/add-product`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

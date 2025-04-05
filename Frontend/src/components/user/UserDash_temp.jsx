@@ -81,7 +81,7 @@ const UserDashboard = () => {
 
                 const token = await user.getIdToken();
 
-                const response = await axios.get('http://localhost:5000/gaupal/products', {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/products`, {
                     params: {
                         category: productFilters.category,
                         organic: productFilters.organic,
@@ -129,7 +129,7 @@ const UserDashboard = () => {
 
                 const token = await user.getIdToken();
 
-                const response = await axios.get('http://localhost:5000/gaupal/article/random/article', {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/random/article`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -151,7 +151,7 @@ const UserDashboard = () => {
 
                 const token = await user.getIdToken();
 
-                const response = await axios.get('http://localhost:5000/gaupal/article/random/breed', {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/random/breed`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

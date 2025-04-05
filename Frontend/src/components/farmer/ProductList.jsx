@@ -24,7 +24,7 @@ const FarmerProductList = () => {
                 
                 const token = await user.getIdToken();
 
-                const response = await axios.get('http://localhost:5000/gaupal/farmer/farmer-products', {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/farmer/farmer-products`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -55,7 +55,7 @@ const FarmerProductList = () => {
                 
                 const token = await user.getIdToken();
 
-                await axios.delete(`http://localhost:5000/gaupal/farmer/${productId}`, {
+                await axios.delete(`${import.meta.env.VITE_SERVER_URL}/gaupal/farmer/${productId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

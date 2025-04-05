@@ -140,7 +140,7 @@ const DiseasePrediction = () => {
       });
 
       // Fetch disease details 
-      const diseaseDetailsResponse = await axios.get(`http://localhost:5000/gaupal/farmer/disease/${predictedDiseaseName}`);
+      const diseaseDetailsResponse = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/farmer/disease/${predictedDiseaseName}`);
       setDiseaseDetails(diseaseDetailsResponse.data);
 
     } catch (err) {

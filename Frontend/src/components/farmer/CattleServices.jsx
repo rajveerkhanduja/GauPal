@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000/gaupal/farmer/cattle'; // Adjust your base URL
+const BASE_URL = `${import.meta.env.VITE_SERVER_URL}/gaupal/farmer/cattle`; // Adjust your base URL
 
 export const CattleService = {
   // Get dashboard metrics

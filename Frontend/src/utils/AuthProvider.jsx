@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
           } else {
             // If no cached data, get from API
             const idToken = await firebaseUser.getIdToken();
-            const response = await axios.get('http://localhost:5000/gaupal/auth/profile', {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/profile`, {
               headers: {
                 Authorization: `Bearer ${idToken}`
               }

@@ -17,7 +17,7 @@ const ProductDetails = () => {
     const fetchProductDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/gaupal/farmer/${productId}`
+          `${import.meta.env.VITE_SERVER_URL}/gaupal/farmer/${productId}`
         );
         
         setProduct(response.data.data);

@@ -57,7 +57,7 @@ const ProductList = () => {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/gaupal/products', {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/products`, {
         params: {
           category: filters.category,
           minPrice: filters.minPrice,
