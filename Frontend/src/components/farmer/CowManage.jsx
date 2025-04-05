@@ -113,7 +113,7 @@ const CattleManagementDashboard = () => {
   // Fetch breeding recommendations
   const fetchBreedingRecommendations = async (breed) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BREEDING_RECOMMEND}/recommend?breed=${breed}`);
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/breeding-recommendations?breed=${breed}`);
       // Ensure the response data is an array, default to empty array if not
       const recommendations = Array.isArray(response.data)
         ? response.data
