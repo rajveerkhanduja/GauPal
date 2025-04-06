@@ -291,7 +291,7 @@ const CattleManagementDashboard = () => {
 
   const handleCompatibilityCheck = async (formData) => {
     try {
-      const response = await axios.post('http://localhost:8080/predict', formData);
+      const response = await axios.post(`${import.meta.env.VITE_BREEDING_PAIR }/predict`, formData);
       setCompatibilityResult(response.data);
     } catch (error) {
       toast.error('Failed to check compatibility');
