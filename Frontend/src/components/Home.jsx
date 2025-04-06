@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, Clock, MapPin, Calendar, ChevronRight, TrendingUp, Package, Tag } from 'lucide-react';
 import { ArrowRight, Search, Dna, Stethoscope, BookOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
 import dairyImage from '../assets/DairyImage.jpg';
@@ -37,7 +37,7 @@ export default function Home() {
   const [translations, setTranslations] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const apiKey = import.meta.env.VITE_GOOGLE_TRANSLATE_KEY;
-  
+
   // Added state for articles and events
   const [articles, setArticles] = useState([]);
   const [translatedArticles, setTranslatedArticles] = useState([]);
@@ -46,7 +46,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [activeArticleIndex, setActiveArticleIndex] = useState(0);
   const [activeEventIndex, setActiveEventIndex] = useState(0);
-  
+
   // Added refs for scrolling
   const articlesRef = useRef(null);
   const eventsRef = useRef(null);
@@ -79,7 +79,7 @@ export default function Home() {
   useEffect(() => {
     fetchRandomArticles();
     fetchEvents();
-    
+
     // Get saved language from local storage or default to English
     const savedLanguage = localStorage.getItem('language') || 'en';
     setLanguage(savedLanguage);
@@ -102,16 +102,16 @@ export default function Home() {
         // For non-authenticated users, you might want to fetch public articles
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/public/random`);
         setArticles(response.data.data || []);
-        
+
         // Set translated articles initially to original articles
         setTranslatedArticles(response.data.data || []);
-        
+
         // Translate articles if language is not English
         const savedLanguage = localStorage.getItem('language') || 'en';
         if (savedLanguage !== 'en') {
           translateArticlesAndEvents(response.data.data || [], [], savedLanguage);
         }
-        
+
         return;
       }
 
@@ -122,10 +122,10 @@ export default function Home() {
         }
       });
       setArticles(response.data.data || []);
-      
+
       // Set translated articles initially to original articles
       setTranslatedArticles(response.data.data || []);
-      
+
       // Translate articles if language is not English
       const savedLanguage = localStorage.getItem('language') || 'en';
       if (savedLanguage !== 'en') {
@@ -146,10 +146,10 @@ export default function Home() {
       setIsLoading(true);
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/events?page=1&limit=6`);
       setEvents(response.data.data || []);
-      
+
       // Set translated events initially to original events
       setTranslatedEvents(response.data.data || []);
-      
+
       // Translate events if language is not English
       const savedLanguage = localStorage.getItem('language') || 'en';
       if (savedLanguage !== 'en') {
@@ -169,19 +169,19 @@ export default function Home() {
   // Function to translate both articles and events
   const translateArticlesAndEvents = async (articlesData, eventsData, selectedLanguage) => {
     setIsLoading(true);
-    
+
     try {
       // Translate articles if they exist
       if (articlesData.length > 0) {
         const translatedArticlesData = await Promise.all(
           articlesData.map(async (article) => {
             const translatedTitle = await translateText(article.title, selectedLanguage, apiKey);
-            const translatedDescription = article.description 
+            const translatedDescription = article.description
               ? await translateText(article.description, selectedLanguage, apiKey)
-              : article.content 
+              : article.content
                 ? await translateText(article.content.substring(0, 100) + '...', selectedLanguage, apiKey)
                 : '';
-            
+
             return {
               ...article,
               title: translatedTitle,
@@ -189,22 +189,22 @@ export default function Home() {
             };
           })
         );
-        
+
         setTranslatedArticles(translatedArticlesData);
       }
-      
+
       // Translate events if they exist
       if (eventsData.length > 0) {
         const translatedEventsData = await Promise.all(
           eventsData.map(async (event) => {
             const translatedTitle = await translateText(event.title, selectedLanguage, apiKey);
-            const translatedDescription = event.description 
+            const translatedDescription = event.description
               ? await translateText(event.description.substring(0, 60) + '...', selectedLanguage, apiKey)
               : '';
             const translatedLocation = event.location
               ? await translateText(event.location, selectedLanguage, apiKey)
               : await translateText('Online', selectedLanguage, apiKey);
-            
+
             return {
               ...event,
               title: translatedTitle,
@@ -213,7 +213,7 @@ export default function Home() {
             };
           })
         );
-        
+
         setTranslatedEvents(translatedEventsData);
       }
     } catch (error) {
@@ -307,7 +307,7 @@ export default function Home() {
       }
 
       setTranslations(newTranslations);
-      
+
       // Also translate the articles and events
       translateArticlesAndEvents(articles, events, selectedLanguage);
     } catch (error) {
@@ -386,11 +386,11 @@ export default function Home() {
                 'From breed identification to disease detection, and direct market access - we provide comprehensive solutions for farmers and cow products enthusiasts.'}
             </p>
             <div className="flex space-x-4">
-              <Link to="/coming-soon" className="bg-green-600 text-white px-8 py-3 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors">
+              <Link to="/login" className="bg-green-600 text-white px-8 py-3 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors">
                 <span>{translations['Explore Services'] || 'Explore Services'}</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link to="/products" className="bg-white text-green-600 px-8 py-3 rounded-lg flex items-center space-x-2 hover:bg-gray-100 transition-colors">
+              <Link to="/login" className="bg-white text-green-600 px-8 py-3 rounded-lg flex items-center space-x-2 hover:bg-gray-100 transition-colors">
                 <span>{translations['Visit Marketplace'] || 'Visit Marketplace'}</span>
               </Link>
             </div>
@@ -421,7 +421,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   {translations[service.description] || service.description}
                 </p>
-                <Link to={service.link} className="text-green-600 hover:text-green-700 font-medium">
+                <Link to="/login" className="text-green-600 hover:text-green-700 font-medium">
                   {translations['Learn More →'] || 'Learn More →'}
                 </Link>
               </motion.div>
@@ -455,17 +455,22 @@ export default function Home() {
             <div
               ref={articlesRef}
               className="flex overflow-x-auto pb-4 gap-4 hide-scrollbar snap-x snap-mandatory"
+              
             >
               {translatedArticles.map((article) => (
                 <div
                   key={article.id || article._id}
                   className="article-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden snap-center"
+                  onClick={() => Navigate('/login')}
                 >
                   <img src={article.imageUrl || "/placeholder-image.jpg"} alt={article.title} className="w-full h-40 object-cover" />
                   <div className="p-4">
                     <h3 className="font-semibold text-gray-800 mb-2">{article.title}</h3>
-                    <p className="text-sm text-gray-600">{article.description || article.content?.substring(0, 100) + '...'}</p>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {article.introduction?.content || article.content?.substring(0, 100)}
+                    </p>
                   </div>
+
                 </div>
               ))}
             </div>
@@ -514,6 +519,7 @@ export default function Home() {
             <div
               ref={eventsRef}
               className="flex overflow-x-auto pb-4 gap-4 hide-scrollbar snap-x snap-mandatory"
+              onClick={() => Navigate('/login')}
             >
               {translatedEvents.map((event) => (
                 <div
@@ -526,7 +532,7 @@ export default function Home() {
                     <div className="flex justify-between items-end">
                       <div>
                         <h3 className="font-semibold text-white mb-1">{event.title}</h3>
-                        <p className="text-sm text-gray-200 mb-2">{event.description}</p>
+                        <p className="text-sm text-gray-200 mb-2 line-clamp-2">{event.description}</p>
                       </div>
                       <div className="flex flex-col items-end ml-2 text-xs text-gray-200">
                         <div className="flex items-center mb-1">
@@ -612,7 +618,7 @@ export default function Home() {
                     {translations[category.description] || category.description}
                   </p>
                   <Link
-                    to={`/products?category=${category.category}`}
+                    to="/login"
                     className="text-green-600 font-medium hover:text-green-700"
                   >
                     {translations['Browse →'] || 'Browse →'}
@@ -636,7 +642,7 @@ export default function Home() {
                 'List your products and reach customers directly'}
             </p>
             <Link
-              to="/register"
+              to="/signup"
               className="bg-green-600 text-white px-8 py-3 rounded-lg inline-flex items-center space-x-2 hover:bg-green-700 transition-colors"
             >
               <span>{translations['Join as Farmer'] || 'Join as Farmer'}</span>

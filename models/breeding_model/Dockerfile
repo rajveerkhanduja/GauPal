@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code and model
 COPY main.py /app/
-COPY model/cattle_predictor_v2.pkl /app/model/cattle_predictor_v2.pkl
+COPY model/cattle_predictor_v5.pkl /app/model/cattle_predictor_v5.pkl
 
 # Expose port 7000
 EXPOSE 8080

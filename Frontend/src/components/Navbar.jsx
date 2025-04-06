@@ -126,6 +126,8 @@ const Navbar = () => {
     
     // Translate all text to the new language
     translateAllText(languageCode);
+
+    window.location.reload(); // Reload the page to apply the new language
   };
 
   return (
@@ -153,25 +155,25 @@ const Navbar = () => {
                 <div className="absolute z-10 mt-2 w-64 bg-white rounded-md shadow-lg">
                   <div className="py-1">
                     <Link 
-                      to="/coming-soon" 
+                      to="/login" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600"
                     >
                       {isTranslating ? '...' : translatedText.breedIdentification}
                     </Link>
                     <Link 
-                      to="/coming-soon" 
+                      to="/login" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600"
                     >
                       {isTranslating ? '...' : translatedText.breedPairing}
                     </Link>
                     <Link 
-                      to="/coming-soon" 
+                      to="/login" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600"
                     >
                       {isTranslating ? '...' : translatedText.diseaseIdentification}
                     </Link>
                     <Link 
-                      to="/coming-soon" 
+                      to="/login" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600"
                     >
                       {isTranslating ? '...' : translatedText.knowMoreAboutBreeds}
@@ -181,20 +183,20 @@ const Navbar = () => {
               )}
             </div>
 
-            <Link to="/products" className="text-gray-700 hover:text-green-600">
+            <Link to="/login" className="text-gray-700 hover:text-green-600">
               {isTranslating ? '...' : translatedText.marketplace}
             </Link>
 
-            <Link to="/nearby-ngos" className="text-gray-700 hover:text-green-600">
+            <Link to="/login" className="text-gray-700 hover:text-green-600">
               {isTranslating ? '...' : translatedText.findNGOs}
             </Link>
 
-            <Link to="/find-clinics" className="text-gray-700 hover:text-green-600">
+            <Link to="/login" className="text-gray-700 hover:text-green-600">
               {isTranslating ? '...' : translatedText.findClinics}
             </Link>
 
             {user?.type === 'farmer' && (
-              <Link to="/farmer-dashboard" className="text-gray-700 hover:text-green-600">
+              <Link to="/farmer/dashboard" className="text-gray-700 hover:text-green-600">
                 {isTranslating ? '...' : translatedText.farmerDashboard}
               </Link>
             )}

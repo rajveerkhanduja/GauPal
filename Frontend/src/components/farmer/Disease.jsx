@@ -4,30 +4,30 @@ import axios from 'axios';
 const TypewriterText = ({ text, delay = 30, onComplete }) => {
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  
+
   useEffect(() => {
     // Reset state when the text prop changes
     setDisplayText('');
     setIsTyping(true);
   }, [text]);
-  
+
   useEffect(() => {
     if (!isTyping) return;
-    
+
     let currentIndex = displayText.length;
-    
+
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
         setDisplayText(text.substring(0, currentIndex + 1));
       }, delay);
-      
+
       return () => clearTimeout(timeout);
     } else {
       setIsTyping(false);
       if (onComplete) onComplete();
     }
   }, [displayText, delay, text, isTyping, onComplete]);
-  
+
   return <span>{displayText}</span>;
 };
 
@@ -69,7 +69,7 @@ const DiseasePrediction = () => {
 
   // Use callback to prevent recreation on every render
   const markTypingComplete = useCallback((section) => {
-    setTypingComplete(prev => ({...prev, [section]: true}));
+    setTypingComplete(prev => ({ ...prev, [section]: true }));
   }, []);
 
   useEffect(() => {
@@ -86,15 +86,31 @@ const DiseasePrediction = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
-      setError(null);
-      setPrediction(null);
-      setDiseaseDetails(null);
-      resetTypingState();
-    } else {
-      setError('Please select a valid image file');
+
+    // Check if file exists
+    if (!file) {
+      return;
     }
+
+    // Check if file is an image
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file');
+      return;
+    }
+
+    // Check if file is jpg, png, or jpeg
+    const allowedFormats = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedFormats.includes(file.type)) {
+      setError('Only JPG, PNG, and JPEG formats are allowed');
+      return;
+    }
+
+    // File is valid, proceed
+    setSelectedFile(file);
+    setError(null);
+    setPrediction(null);
+    setDiseaseDetails(null);
+    resetTypingState();
   };
 
   const resetTypingState = () => {
@@ -110,7 +126,7 @@ const DiseasePrediction = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (!selectedFile) {
       setError('Please select an image');
       return;
@@ -176,22 +192,23 @@ const DiseasePrediction = () => {
       <div className="container mx-auto p-6">
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h1 className="text-3xl font-bold text-green-800 mb-6 text-center">Cattle Disease Prediction</h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col">
               <div className="bg-green-100 rounded-lg p-6 mb-4">
                 <h2 className="text-xl font-semibold text-green-700 mb-4">Upload Image</h2>
-                
+                <p className="text-green-700 text-sm mt-1">Accepted formats: JPG, PNG, JPEG</p>
+
                 <div className="border-2 border-dashed border-green-300 rounded-lg p-4 text-center hover:bg-green-50 transition duration-300 mb-4">
-                  <input 
-                    type="file" 
+                  <input
+                    type="file"
                     onChange={handleFileChange}
                     accept="image/*"
                     className="hidden"
                     id="image-upload"
                   />
-                  <label 
-                    htmlFor="image-upload" 
+                  <label
+                    htmlFor="image-upload"
                     className="cursor-pointer flex flex-col items-center justify-center"
                   >
                     {preview ? (
@@ -207,9 +224,9 @@ const DiseasePrediction = () => {
                     )}
                   </label>
                 </div>
-                
-                <button 
-                  onClick={handleSubmit} 
+
+                <button
+                  onClick={handleSubmit}
                   disabled={loading || !selectedFile}
                   className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 disabled:opacity-50 transition duration-300 flex items-center justify-center"
                 >
@@ -231,14 +248,14 @@ const DiseasePrediction = () => {
                   )}
                 </button>
               </div>
-              
+
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
             </div>
-            
+
             <div className="flex flex-col">
               {prediction && (
                 <div className="bg-green-100 rounded-lg p-6 mb-4">
@@ -246,8 +263,8 @@ const DiseasePrediction = () => {
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <p className="text-lg font-medium text-green-800">
                       <span className="mr-2">Predicted Disease:</span>
-                      <TypewriterText 
-                        text={prediction.diseaseName} 
+                      <TypewriterText
+                        text={prediction.diseaseName}
                         onComplete={() => markTypingComplete('prediction')}
                       />
                     </p>
@@ -263,45 +280,45 @@ const DiseasePrediction = () => {
                   </div>
                 </div>
               )}
-              
+
               {diseaseDetails && typingComplete.prediction && (
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h2 className="text-xl font-semibold text-green-700 mb-4">Disease Details</h2>
-                  
+
                   <div className="space-y-4">
                     <div className="border-l-4 border-green-500 pl-3">
                       <h3 className="text-lg font-medium text-green-800 mb-2">Symptoms</h3>
                       <ul className="list-disc pl-5 space-y-1 text-green-700">
                         {diseaseDetails.symptoms.map((symptom, index) => (
                           <li key={index}>
-                            <TypewriterText 
-                              text={symptom} 
+                            <TypewriterText
+                              text={symptom}
                               onComplete={() => handleSymptomComplete(index)}
                             />
                           </li>
                         ))}
                       </ul>
                     </div>
-                    
+
                     {typingComplete.symptoms && (
                       <div className="border-l-4 border-green-500 pl-3">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Details</h3>
                         <p className="text-green-700">
-                          <TypewriterText 
-                            text={diseaseDetails.details} 
+                          <TypewriterText
+                            text={diseaseDetails.details}
                             onComplete={() => markTypingComplete('details')}
                           />
                         </p>
                       </div>
                     )}
-                    
+
                     {typingComplete.details && (
                       <div className="border-l-4 border-green-500 pl-3">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Precautions</h3>
                         <ul className="list-disc pl-5 space-y-1 text-green-700">
                           {diseaseDetails.precautions.map((precaution, index) => (
                             <li key={index}>
-                              <TypewriterText 
+                              <TypewriterText
                                 text={precaution}
                                 onComplete={() => handlePrecautionComplete(index)}
                               />
@@ -310,14 +327,14 @@ const DiseasePrediction = () => {
                         </ul>
                       </div>
                     )}
-                    
+
                     {typingComplete.precautions && (
                       <div className="border-l-4 border-green-500 pl-3">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Solutions</h3>
                         <ul className="list-disc pl-5 space-y-1 text-green-700">
                           {diseaseDetails.solutions.map((solution, index) => (
                             <li key={index}>
-                              <TypewriterText 
+                              <TypewriterText
                                 text={solution}
                                 onComplete={() => handleSolutionComplete(index)}
                               />
@@ -326,13 +343,13 @@ const DiseasePrediction = () => {
                         </ul>
                       </div>
                     )}
-                    
+
                     {diseaseDetails.veterinaryImportance && typingComplete.solutions && (
                       <div className="border-l-4 border-green-500 pl-3">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Veterinary Importance</h3>
                         <p className="text-green-700">
-                          <TypewriterText 
-                            text={diseaseDetails.veterinaryImportance} 
+                          <TypewriterText
+                            text={diseaseDetails.veterinaryImportance}
                             onComplete={() => markTypingComplete('veterinary')}
                           />
                         </p>
@@ -344,7 +361,7 @@ const DiseasePrediction = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="text-center text-green-600 text-sm">
           <p>© 2025 GauPal - Cattle Health Monitoring System</p>
         </div>

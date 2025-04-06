@@ -17,6 +17,8 @@ const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,31 +31,31 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     // Validate form
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters long');
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
-        auth, 
-        formData.email, 
+        auth,
+        formData.email,
         formData.password
       );
-      
+
       // Get ID token for API request
       const idToken = await userCredential.user.getIdToken();
-      
+
       // Register user in your backend
       const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/gaupal/auth/signup`, {
         email: formData.email,
@@ -67,7 +69,7 @@ const SignupPage = () => {
           Authorization: `Bearer ${idToken}`
         }
       });
-      
+
       // Create a user object similar to what the login endpoint returns
       const user = {
         uid: userCredential.user.uid,
@@ -78,10 +80,10 @@ const SignupPage = () => {
         userType: formData.userType,
         isVerified: false
       };
-      
+
       // Store complete user object in localStorage
       localStorage.setItem('user', JSON.stringify(user));
-      
+
       // Redirect based on user type
       if (formData.userType === 'farmer') {
         navigate('/farmer/dashboard');
@@ -90,7 +92,7 @@ const SignupPage = () => {
       }
     } catch (error) {
       console.error('Signup error:', error);
-      
+
       // Handle specific Firebase auth errors
       if (error.code === 'auth/email-already-in-use') {
         setError('This email is already registered. Please use a different email or try logging in.');
@@ -100,7 +102,7 @@ const SignupPage = () => {
         setError('The email address is not valid. Please check and try again.');
       } else if (error.code === 'auth/network-request-failed') {
         setError('Network error. Please check your internet connection and try again.');
-      } 
+      }
       // Handle backend API errors
       else if (error.response) {
         if (error.response.status === 409) {
@@ -136,18 +138,18 @@ const SignupPage = () => {
             <p className="text-green-100">Connect with farmers and explore indigenous products</p>
           </div>
         </div>
-    
+
         {/* Form Section */}
         <div className="w-full md:w-1/2 p-8 overflow-y-auto max-h-[90vh]">
           <div className="max-w-md mx-auto">
             <h1 className="text-3xl font-bold text-green-800 mb-8 text-center">Create Your Account</h1>
-            
+
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
                 {error}
               </div>
             )}
-            
+
             <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
               {/* Add custom scrollbar styles to your CSS */}
               <style jsx>{`
@@ -185,16 +187,34 @@ const SignupPage = () => {
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="password">
                   Password
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  minLength="6"
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    minLength="6"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5 text-gray-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5 text-gray-500">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
                 <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters long</p>
               </div>
 
@@ -306,7 +326,7 @@ const SignupPage = () => {
                 ) : 'Sign Up'}
               </button>
             </form>
-            
+
             <div className="mt-6 text-center">
               <p className="text-gray-600">
                 Already have an account?{' '}

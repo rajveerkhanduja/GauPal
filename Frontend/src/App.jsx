@@ -351,6 +351,10 @@ const router = createBrowserRouter([
         path:"coming-soon",
         element: <ComingSoon/>
       },
+      {
+        path: "settings",
+        element: <SettingsPage/>
+      },
     ]
   },
   {

@@ -14,6 +14,7 @@ import {
   HeartIcon
 } from 'lucide-react';
 
+import BreedingForm from './compatibility';
 
 const CattleManagementDashboard = () => {
   const [user, setUser] = useState(null);
@@ -32,6 +33,8 @@ const CattleManagementDashboard = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isBreedingModalOpen, setIsBreedingModalOpen] = useState(false);
   const [breedingRecommendations, setBreedingRecommendations] = useState([]);
+  const [isCompatibilityModalOpen, setIsCompatibilityModalOpen] = useState(false);
+  const [compatibilityResult, setCompatibilityResult] = useState(null);
 
   // Form data states
   const [newCattleForm, setNewCattleForm] = useState({
@@ -286,6 +289,16 @@ const CattleManagementDashboard = () => {
     }
   };
 
+  const handleCompatibilityCheck = async (formData) => {
+    try {
+      const response = await axios.post('http://localhost:8080/predict', formData);
+      setCompatibilityResult(response.data);
+    } catch (error) {
+      toast.error('Failed to check compatibility');
+      console.error(error);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -311,14 +324,22 @@ const CattleManagementDashboard = () => {
 
       {/* Cattle List Section */}
       <div className="bg-white shadow-md rounded-lg">
-        <div className="flex justify-between items-center p-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-2">
           <h2 className="text-xl font-semibold">My Cattle</h2>
-          <button
-            onClick={() => setIsAddCattleModalOpen(true)}
-            className="flex items-center bg-green-500 text-white px-4 py-2 rounded-md"
-          >
-            <PlusIcon className="mr-2" /> Add Cattle
-          </button>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setIsCompatibilityModalOpen(true)}
+              className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            >
+              <HeartIcon className="mr-2" /> Check Compatibility
+            </button>
+            <button
+              onClick={() => setIsAddCattleModalOpen(true)}
+              className="flex items-center bg-green-500 text-white px-4 py-2 rounded-md"
+            >
+              <PlusIcon className="mr-2" /> Add Cattle
+            </button>
+          </div>
         </div>
 
         {/* Cattle List Table */}
@@ -904,6 +925,74 @@ const CattleManagementDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Compatibility Check Modal */}
+      {isCompatibilityModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] relative flex flex-col">
+            <button
+              onClick={() => {
+                setIsCompatibilityModalOpen(false);
+                setCompatibilityResult(null);
+              }}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 z-10"
+            >
+              <XIcon size={24} />
+            </button>
+
+            <div className="p-4 border-b">
+              <h2 className="text-xl font-semibold">Check Breeding Compatibility</h2>
+            </div>
+
+            <div className="overflow-y-auto flex-grow p-4">
+              {!compatibilityResult ? (
+                <BreedingForm onSubmit={handleCompatibilityCheck} />
+              ) : (
+                <div className="space-y-4">
+                  <div className={`p-6 rounded-lg border ${
+                    compatibilityResult.compatible === 'Yes' 
+                      ? 'border-green-500 bg-green-50' 
+                      : 'border-red-500 bg-red-50'
+                  }`}>
+                    <h3 className="text-xl font-semibold mb-4">Results</h3>
+                    <div className="space-y-2">
+                      <p className="text-lg">
+                        Compatible: 
+                        <span className={`font-bold ${
+                          compatibilityResult.compatible === 'Yes' 
+                            ? 'text-green-600' 
+                            : 'text-red-600'
+                        }`}>
+                          {compatibilityResult.compatible}
+                        </span>
+                      </p>
+                      <p className="text-lg">
+                        Confidence Score: 
+                        <span className="font-bold">
+                          {compatibilityResult.confidence_score}%
+                        </span>
+                      </p>
+                      <p className="text-lg">
+                        Raw Score: 
+                        <span className="font-bold">
+                          {compatibilityResult.raw_ccs_score}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setCompatibilityResult(null)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  >
+                    Check Another Pair
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

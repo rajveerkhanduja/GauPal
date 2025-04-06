@@ -174,7 +174,7 @@ const Sidebar = () => {
               
           {isUserMenuOpen && (
             <div className="mt-2 space-y-2">
-              <Link to="/farmer/coming-soon" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-600">
+              <Link to="/farmer/settings" className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-600">
                 <Settings size={20} />
                 <span>Settings</span>
               </Link>
