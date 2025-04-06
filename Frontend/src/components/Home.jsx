@@ -48,7 +48,7 @@ export default function Home() {
   const [activeEventIndex, setActiveEventIndex] = useState(0);
 
   // Added refs for scrolling
-  const articlesRef = useRef(null);
+  // const articlesRef = useRef(null);
   const eventsRef = useRef(null);
 
   // List of Indian languages with their language codes
@@ -77,7 +77,7 @@ export default function Home() {
 
   // Fetch articles and events on component mount
   useEffect(() => {
-    fetchRandomArticles();
+    // fetchRandomArticles();
     fetchEvents();
 
     // Get saved language from local storage or default to English
@@ -92,7 +92,7 @@ export default function Home() {
     }
   }, []);
 
-  // Function to fetch random articles
+  /* // Function to fetch random articles
   const fetchRandomArticles = async () => {
     try {
       const auth = getAuth();
@@ -101,6 +101,7 @@ export default function Home() {
       if (!user) {
         // For non-authenticated users, you might want to fetch public articles
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/public/random`);
+        
         setArticles(response.data.data || []);
 
         // Set translated articles initially to original articles
@@ -138,7 +139,7 @@ export default function Home() {
       setArticles([]);
       setTranslatedArticles([]);
     }
-  };
+  }; */
 
   // Function to fetch events
   const fetchEvents = async () => {
@@ -233,7 +234,7 @@ export default function Home() {
   };
 
   // Functions to scroll to specific article or event
-  const scrollToArticle = (index) => {
+  /* const scrollToArticle = (index) => {
     if (articlesRef.current && articlesRef.current.children[index]) {
       articlesRef.current.scrollTo({
         left: articlesRef.current.children[index].offsetLeft,
@@ -242,7 +243,7 @@ export default function Home() {
       setActiveArticleIndex(index);
     }
   };
-
+ */
   const scrollToEvent = (index) => {
     if (eventsRef.current && eventsRef.current.children[index]) {
       eventsRef.current.scrollTo({
@@ -432,7 +433,7 @@ export default function Home() {
 
       <div className="mt-6 space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Articles Section */}
-        <div className="relative">
+        {/* <div className="relative">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-800">{translations['Latest Articles'] || 'Latest Articles'}</h2>
             <div className="flex space-x-2">
@@ -455,7 +456,7 @@ export default function Home() {
             <div
               ref={articlesRef}
               className="flex overflow-x-auto pb-4 gap-4 hide-scrollbar snap-x snap-mandatory"
-              
+
             >
               {translatedArticles.map((article) => (
                 <div
@@ -478,10 +479,10 @@ export default function Home() {
             <div className="text-center py-8 bg-gray-50 rounded-lg">
               <p className="text-gray-500">{translations['No articles available at the moment'] || 'No articles available at the moment'}</p>
             </div>
-          )}
+          )} */}
 
           {/* Mobile scroll indicators */}
-          {translatedArticles.length > 0 && (
+          {/* {translatedArticles.length > 0 && (
             <div className="flex justify-center mt-4 space-x-1 md:hidden">
               {translatedArticles.map((_, index) => (
                 <button
@@ -493,7 +494,7 @@ export default function Home() {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Events Section */}
         <div className="relative">
