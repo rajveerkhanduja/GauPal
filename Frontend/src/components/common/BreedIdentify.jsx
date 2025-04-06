@@ -85,7 +85,7 @@ export default function CowBreedIdentifier() {
 
       // Use axios instead of fetch
       const response = await axios.post(
-        `${import.meta.env.VITE_IDENTIFY_BREED}/predict`,
+        `https://breed-identify-c5rlfsw7kq-el.a.run.app/predict`,
         formData,
         {
           headers: {
