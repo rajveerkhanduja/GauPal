@@ -84,7 +84,7 @@ export default function CowBreedIdentifier() {
       formData.append('file', file);
 
       // Ensure the URL is using HTTPS
-      let apiUrl = `${import.meta.env.VITE_IDENTIFY_BREED}/predict`;
+      let apiUrl = `${import.meta.env.VITE_IDENTIFY_BREED}/predict/`;
       if (!apiUrl.startsWith('https://')) {
         apiUrl = apiUrl.replace('http://', 'https://');
       }
