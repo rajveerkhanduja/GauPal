@@ -83,9 +83,11 @@ export default function CowBreedIdentifier() {
       const formData = new FormData();
       formData.append('file', file);
 
-      // Use axios instead of fetch
+      // Ensure the URL is using HTTPS
+      const apiUrl = new URL('/predict', import.meta.env.VITE_IDENTIFY_BREED).toString();
+      
       const response = await axios.post(
-        `https://breed-identify-c5rlfsw7kq-el.a.run.app/predict`,
+        apiUrl,
         formData,
         {
           headers: {

@@ -1,8 +1,9 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, Clock, MapPin, Calendar, ChevronRight, TrendingUp, Package, Tag } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
+import {getAuth} from "firebase/auth";
+import axios from "axios"
 
 
 import ChatbotComponent from '../ChatBot.jsx';
@@ -15,6 +16,11 @@ const FarmerDash = () => {
   // State to track which item is active for auto-scrolling
   const [activeArticleIndex, setActiveArticleIndex] = useState(0);
   const [activeEventIndex, setActiveEventIndex] = useState(0);
+
+  const [articles, setArticles] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Refs for the scrollable containers
   const articlesRef = useRef(null);
@@ -75,68 +81,7 @@ const FarmerDash = () => {
   }
 
 
-  // Sample data - replace with your actual data
-  const articles = [
-    {
-      id: 1,
-      image: '/api/placeholder/300/200',
-      title: 'Best Practices for Dairy Farming',
-      description: 'Learn about the latest techniques to improve milk production and cow health.'
-    },
-    {
-      id: 2,
-      image: '/api/placeholder/300/200',
-      title: 'Organic Feed Solutions',
-      description: 'Discover organic feed options that can boost cow health and milk quality.'
-    },
-    {
-      id: 3,
-      image: '/api/placeholder/300/200',
-      title: 'Disease Prevention Guide',
-      description: 'Essential tips to keep your cattle healthy and prevent common diseases.'
-    },
-    {
-      id: 4,
-      image: '/api/placeholder/300/200',
-      title: 'Modern Dairy Equipment',
-      description: 'New technologies that can improve efficiency on your dairy farm.'
-    }
-  ];
 
-  const events = [
-    {
-      id: 1,
-      image: '/api/placeholder/300/200',
-      title: 'Farmer\'s Market',
-      description: 'Sell your dairy products directly to customers',
-      location: 'City Center',
-      time: 'Apr 15, 9AM-2PM'
-    },
-    {
-      id: 2,
-      image: '/api/placeholder/300/200',
-      title: 'Cattle Health Workshop',
-      description: 'Expert veterinarians will share insights',
-      location: 'Agricultural College',
-      time: 'Apr 22, 10AM-12PM'
-    },
-    {
-      id: 3,
-      image: '/api/placeholder/300/200',
-      title: 'Annual Dairy Expo',
-      description: 'Network with other farmers and suppliers',
-      location: 'Exhibition Center',
-      time: 'May 5-7, All Day'
-    },
-    {
-      id: 4,
-      image: '/api/placeholder/300/200',
-      title: 'Sustainable Farming Seminar',
-      description: 'Learn eco-friendly farming practices',
-      location: 'Community Hall',
-      time: 'May 12, 2PM-5PM'
-    }
-  ];
 
   // Function to scroll containers
   const scroll = (containerRef, direction) => {
@@ -152,8 +97,8 @@ const FarmerDash = () => {
 
   // Function to handle auto-scrolling
   const scrollToArticle = (index) => {
-    if (articlesRef.current && index < articles.length) {
-      const cardWidth = articlesRef.current.querySelector('.article-card').offsetWidth;
+    if (articlesRef.current && articles.length > 0 && index < articles.length) {
+      const cardWidth = articlesRef.current.querySelector('.article-card')?.offsetWidth || 0;
       const margin = 16; // Adjust this to match your card's margin
       articlesRef.current.scrollTo({
         left: index * (cardWidth + margin),
@@ -164,8 +109,8 @@ const FarmerDash = () => {
   };
 
   const scrollToEvent = (index) => {
-    if (eventsRef.current && index < events.length) {
-      const cardWidth = eventsRef.current.querySelector('.event-card').offsetWidth;
+    if (eventsRef.current && events.length > 0 && index < events.length) {
+      const cardWidth = eventsRef.current.querySelector('.event-card')?.offsetWidth || 0;
       const margin = 16; // Adjust this to match your card's margin
       eventsRef.current.scrollTo({
         left: index * (cardWidth + margin),
@@ -176,15 +121,20 @@ const FarmerDash = () => {
   };
 
   // Auto scroll timer
+
   useEffect(() => {
     const articlesInterval = setInterval(() => {
-      const nextIndex = (activeArticleIndex + 1) % articles.length;
-      scrollToArticle(nextIndex);
+      if (articles.length > 0) {
+        const nextIndex = (activeArticleIndex + 1) % articles.length;
+        scrollToArticle(nextIndex);
+      }
     }, 5000);
 
     const eventsInterval = setInterval(() => {
-      const nextIndex = (activeEventIndex + 1) % events.length;
-      scrollToEvent(nextIndex);
+      if (events.length > 0) {
+        const nextIndex = (activeEventIndex + 1) % events.length;
+        scrollToEvent(nextIndex);
+      }
     }, 5000);
 
     return () => {
@@ -193,6 +143,51 @@ const FarmerDash = () => {
     };
   }, [activeArticleIndex, activeEventIndex, articles.length, events.length]);
 
+
+  useEffect(() => {
+    const fetchRandomArticles = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+          // For non-authenticated users, fetch public articles
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/public/random`);
+          setArticles(response.data.data || []);
+          return;
+        }
+
+        const token = await user.getIdToken();
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/article/random/article`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setArticles(response.data.data || []);
+      } catch (error) {
+        console.error('Error fetching random articles:', error);
+        setError('Failed to fetch articles');
+        setArticles([]);
+      }
+    };
+
+    const fetchEvents = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/gaupal/events?page=1&limit=6`);
+        setEvents(response.data.data || []);
+      } catch (err) {
+        console.error('Error fetching events:', err);
+        setError('Failed to load events. Please try again later.');
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRandomArticles();
+    fetchEvents();
+  }, []);
 
   return (
     <div className="relative min-h-screen">
@@ -390,7 +385,7 @@ const FarmerDash = () => {
                       <Calendar size={16} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{event.title}</p>
+                      <p className="text-sm font-medium text-gray-800 line-clamp-2">{event.title}</p>
                       <p className="text-xs text-gray-500 mt-1">{event.date}</p>
                     </div>
                   </div>
@@ -507,31 +502,44 @@ const FarmerDash = () => {
             ref={articlesRef}
             className="flex overflow-x-auto pb-4 gap-4 hide-scrollbar snap-x snap-mandatory"
           >
-            {articles.map((article, index) => (
-              <div
-                key={article.id}
-                className="article-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden snap-center"
-              >
-                <img src={article.image} alt={article.title} className="w-full h-40 object-cover" />
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">{article.title}</h3>
-                  <p className="text-sm text-gray-600">{article.description}</p>
+            {isLoading ? (
+              <div className="w-full text-center py-4">Loading articles...</div>
+            ) : error ? (
+              <div className="w-full text-center py-4 text-red-500">{error}</div>
+            ) : articles.length > 0 ? (
+              articles.map((article, index) => (
+                <div
+                  key={article._id || index}
+                  className="article-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden snap-center"
+                >
+                  <img
+                    src={article.coverImage || '/api/placeholder/300/200'}
+                    alt={article.title}
+                    className="w-full h-40 object-cover"
+                    onError={(e) => { e.target.src = '/api/placeholder/300/200' }}
+                  />
+                  <div className="p-4">
+                    <h3 className="font-semibold text-gray-800 mb-2">{article.title}</h3>
+                    <p className="text-sm text-gray-600">{article.description || article.content?.substring(0, 100)}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="w-full text-center py-4">No articles available</div>
+            )}
           </div>
+        </div>
 
-          {/* Mobile scroll indicators */}
-          <div className="flex justify-center mt-4 space-x-1 md:hidden">
-            {articles.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollToArticle(index)}
-                className={`h-2 rounded-full focus:outline-none ${activeArticleIndex === index ? 'w-4 bg-green-600' : 'w-2 bg-gray-300'
-                  }`}
-              />
-            ))}
-          </div>
+        {/* Mobile scroll indicators */}
+        <div className="flex justify-center mt-4 space-x-1 md:hidden">
+          {articles.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollToArticle(index)}
+              className={`h-2 rounded-full focus:outline-none ${activeArticleIndex === index ? 'w-4 bg-green-600' : 'w-2 bg-gray-300'
+                }`}
+            />
+          ))}
         </div>
 
         {/* Events Section */}
@@ -558,35 +566,47 @@ const FarmerDash = () => {
             ref={eventsRef}
             className="flex overflow-x-auto pb-4 gap-4 hide-scrollbar snap-x snap-mandatory"
           >
-            {events.map((event, index) => (
-              <div
-                key={event.id}
-                className="event-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden relative snap-center"
-              >
-                <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-0 p-4 w-full">
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <h3 className="font-semibold text-white mb-1">{event.title}</h3>
-                      <p className="text-sm text-gray-200 mb-2">{event.description}</p>
-                    </div>
-                    <div className="flex flex-col items-end ml-2 text-xs text-gray-200">
-                      <div className="flex items-center mb-1">
-                        <Clock size={12} className="mr-1" />
-                        <span>{event.time}</span>
+            {isLoading ? (
+              <div className="w-full text-center py-4">Loading events...</div>
+            ) : error ? (
+              <div className="w-full text-center py-4 text-red-500">{error}</div>
+            ) : events.length > 0 ? (
+              events.map((event, index) => (
+                <div
+                  key={event._id || index}
+                  className="event-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden relative snap-center"
+                >
+                  <img
+                    src={event.image || '/api/placeholder/300/200'}
+                    alt={event.title}
+                    className="w-full h-48 object-cover"
+                    onError={(e) => { e.target.src = '/api/placeholder/300/200' }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute bottom-0 p-4 w-full">
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <h3 className="font-semibold text-white mb-1 line-clamp-3">{event.title}</h3>
+                        <p className="text-sm text-gray-200 mb-2 line-clamp-2">{event.description}</p>
                       </div>
-                      <div className="flex items-center">
-                        <MapPin size={12} className="mr-1" />
-                        <span>{event.location}</span>
+                      <div className="flex flex-col items-end ml-2 text-xs text-gray-200">
+                        <div className="flex items-center mb-1">
+                          <Clock size={12} className="mr-1" />
+                          <span>{event.time || event.date}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin size={12} className="mr-1" />
+                          <span>{event.location}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="w-full text-center py-4">No events available</div>
+            )}
           </div>
-
           {/* Mobile scroll indicators */}
           <div className="flex justify-center mt-4 space-x-1 md:hidden">
             {events.map((_, index) => (

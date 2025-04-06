@@ -123,7 +123,7 @@ const EventCard = ({ event, style }) => {
       <div className="absolute inset-0 p-4 flex flex-col justify-between z-10 text-white">
         <div>
           <h3 className="text-xl font-bold mb-2 drop-shadow-md">{event.name}</h3>
-          <p className="text-sm drop-shadow-md">
+          <p className="text-sm drop-shadow-md line-clamp-2 ">
             {truncateText(event.description, 150)}
           </p>
         </div>
