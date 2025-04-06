@@ -89,7 +89,6 @@ export default function CowBreedIdentifier() {
         apiUrl = apiUrl.replace('http://', 'https://');
       }
 
-      console.log('API URL:', apiUrl); // Debugging line
 
       const response = await axios.post(
         apiUrl,
