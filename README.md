@@ -14,7 +14,7 @@ GauPal is a project that consists of three main directories:
 ### 1️⃣ Frontend Setup
 ```sh
 cd Frontend
-npm install  # Install dependencies
+npm install  # Install dependencie
 npm run dev  # Start the development server
 ```
 
