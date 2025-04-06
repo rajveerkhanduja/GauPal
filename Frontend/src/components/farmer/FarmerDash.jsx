@@ -513,7 +513,7 @@ const FarmerDash = () => {
                   className="article-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden snap-center"
                 >
                   <img
-                    src={article.coverImage || '/api/placeholder/300/200'}
+                    src={article.introduction.image.url || '/api/placeholder/300/200'}
                     alt={article.title}
                     className="w-full h-40 object-cover"
                     onError={(e) => { e.target.src = '/api/placeholder/300/200' }}
@@ -577,7 +577,7 @@ const FarmerDash = () => {
                   className="event-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden relative snap-center"
                 >
                   <img
-                    src={event.image || '/api/placeholder/300/200'}
+                    src={event.images[0].url || '/api/placeholder/300/200'}
                     alt={event.title}
                     className="w-full h-48 object-cover"
                     onError={(e) => { e.target.src = '/api/placeholder/300/200' }}

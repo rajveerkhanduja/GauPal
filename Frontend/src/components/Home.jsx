@@ -527,7 +527,7 @@ export default function Home() {
                   key={event.id || event._id}
                   className="event-card flex-shrink-0 w-72 bg-white rounded-lg shadow-md overflow-hidden relative snap-center"
                 >
-                  <img src={event.imageUrl || "/placeholder-event.jpg"} alt={event.title} className="w-full h-48 object-cover" />
+                  <img src={event.images[0].url || "/placeholder-event.jpg"} alt={event.title} className="w-full h-48 object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   <div className="absolute bottom-0 p-4 w-full">
                     <div className="flex justify-between items-end">
