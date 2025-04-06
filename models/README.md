@@ -18,7 +18,6 @@ This model classifies images of Indian cow breeds using a lightweight and effici
 ### ScreenShot:
   ![image](https://github.com/user-attachments/assets/fd3b0f51-38f3-4345-8d07-0ed78547329c)
 
-
 ## Model 2: AI-Powered Cattle Recommendation for Breeding
 ### Description
 This model uses a Genetic Algorithm for Feature Selection combined with a Random Forest-based Recommendation Engine to suggest the most genetically compatible bulls for breeding. It evaluates cow profiles based on breed, health, and physical traits, then intelligently matches them with optimal bulls from the database.
@@ -32,6 +31,7 @@ This model uses a Genetic Algorithm for Feature Selection combined with a Random
 
 ### ScreenShot:
 ![image](https://github.com/user-attachments/assets/75a715df-2b98-4510-8aaf-a276d11db6c9)
+![image](https://github.com/user-attachments/assets/913f2ca3-559c-4a38-9529-db2ecca15e43)
 
 
 
