@@ -37,6 +37,10 @@ GauPal/
 * **Dev Tools**: Google IDX, Chart.js, Vercel
 
 ---
+<p float="left">
+  <img src="./assets/gaupal1.png" width="45%" />
+  <img src="./assets/gaupal2.png" width="45%" />
+</p>
 
 ## 🚀 Setup Instructions
 
@@ -81,6 +85,10 @@ The `Models/` folder contains trained machine learning models for:
 
 Ensure these models are either downloaded locally or connected to GCP Cloud Storage.
 
+<p float="left">
+  <img src="./assets/gaupal3.png" width="45%" />
+  <img src="./assets/gaupal4.png" width="45%" />
+</p>
 
 ---
 
@@ -90,6 +98,10 @@ Ensure these models are either downloaded locally or connected to GCP Cloud Stor
 * WhatsApp voice assistant for rural outreach
 * Blockchain-based cattle lineage tracking
 * AI-powered feed/nutrition planner
+
+<p float="left">
+  <img src="./assets/gaupal5.png" width="100%" />
+</p>
 
 
 Empowering farmers. Preserving heritage. Promoting sustainability.
